@@ -1,4 +1,14 @@
 import { DataSource } from "typeorm";
+import { Usuario } from './entities/Usuarios';
+import { Producto } from "./entities/Productos";
+import { Valoracion } from "./entities/Valoraciones";
+import { Transaccion } from "./entities/Transacciones";
+import { MetodoPago } from "./entities/MetodoPago";
+import { Categoria } from "./entities/Categorias";
+import { Disponibilidad } from "./entities/Disponibilidad";
+import { EstadoTransaccion } from "./entities/EstadoTransaccion";
+
+const globalForDb = global as unknown as { AppDataSource: DataSource };
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -9,5 +19,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: false,
     logging: true,
-    entities: [],
+    entities: [Usuario, Producto, Valoracion, Transaccion, MetodoPago, Categoria, Disponibilidad, EstadoTransaccion],
 })
+
+if (process.env.NODE_ENV !== "production") globalForDb.AppDataSource = AppDataSource;

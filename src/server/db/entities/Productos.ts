@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from "typeorm"
-import { Usuario } from "./Usuarios"
+import type { Usuario } from "./Usuarios"
 import { Categoria } from "./Categorias"
 import { Disponibilidad } from "./Disponibilidad"
-import { Transaccion } from "./Transacciones"
+import type { Transaccion } from "./Transacciones"
 
 @Entity("producto")
 export class Producto {
@@ -34,7 +34,7 @@ export class Producto {
     @Column({ name: "fotoproducto", type: "bytea", nullable: true })
     foto!: Buffer
 
-    @ManyToOne(() => Usuario, (usuario) => usuario.productos)
+    @ManyToOne("Usuario", (usuario: Usuario) => usuario.productos)
     @JoinColumn({ name: "idusuario" })
     vendedor!: Usuario
 
@@ -46,6 +46,6 @@ export class Producto {
     @JoinColumn({ name: "iddisponibilidad" })
     disponibilidad!: Disponibilidad
 
-    @OneToMany(() => Transaccion, (transaccion) => transaccion.producto)
+    @OneToMany("Transaccion", (transaccion: Transaccion) => transaccion.producto)
     transacciones!: Transaccion[]
 }

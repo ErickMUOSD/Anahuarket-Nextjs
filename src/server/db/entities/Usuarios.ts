@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
-import { Producto } from "./Productos"
-import { Transaccion } from "./Transacciones"
+import type { Producto } from "./Productos"
+import type { Transaccion } from "./Transacciones"
 
 @Entity("usuarios")
 export class Usuario {
@@ -16,7 +16,7 @@ export class Usuario {
     @Column({ name: "telefono", type: "varchar", length: 75 })
     telefono!: string
 
-    @Column({ name: "contrasena", type: "varchar", length: 50 })
+    @Column({ name: "contrasena", type: "varchar", length: 255 })
     contrasena!: string
 
     @Column({ name: "fecharegistro", type: "timestamp" })
@@ -28,12 +28,12 @@ export class Usuario {
     @Column({ name: "fotousuario", type: "bytea", nullable: true })
     foto!: Buffer
 
-    @OneToMany(() => Producto, producto => producto.vendedor)
+    @OneToMany("Producto", (producto: Producto) => producto.vendedor)
     productos!: Producto[]
 
-    @OneToMany(() => Transaccion, transaccion => transaccion.comprador)
+    @OneToMany("Transaccion", (transaccion: Transaccion) => transaccion.comprador)
     compras!: Transaccion[]
 
-    @OneToMany(() => Transaccion, transaccion => transaccion.vendedor)
+    @OneToMany("Transaccion", (transaccion: Transaccion) => transaccion.vendedor)
     ventas!: Transaccion[]
 }
