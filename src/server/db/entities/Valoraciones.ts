@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm"
-import { Transaccion } from "./Transacciones"
+import type { Transaccion } from "./Transacciones"
 
 @Entity("valoraciones")
 export class Valoracion {
@@ -15,7 +15,7 @@ export class Valoracion {
     @Column({ name: "fechavaloracion", type: "timestamp" })
     fechavaloracion!: Date
 
-    @ManyToOne(() => Transaccion, (transaccion) => transaccion.valoraciones)
+    @ManyToOne("Transaccion", (transaccion: Transaccion) => transaccion.valoraciones)
     @JoinColumn({ name: "idtransaccion" })
     transaccion!: Transaccion
 }

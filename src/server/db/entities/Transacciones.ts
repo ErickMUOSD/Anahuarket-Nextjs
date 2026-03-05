@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, ManyToOne } from "typeorm"
-import { Usuario } from "./Usuarios"
-import { Producto } from "./Productos"
+import type { Usuario } from "./Usuarios"
+import type { Producto } from "./Productos"
 import { EstadoTransaccion } from "./EstadoTransaccion"
 import { MetodoPago } from "./MetodoPago"
-import { Valoracion } from "./Valoraciones"
+import type { Valoracion } from "./Valoraciones"
 
 @Entity("transacciones")
 export class Transaccion {
@@ -31,15 +31,15 @@ export class Transaccion {
     @Column({ name: "isactive", type: "smallint" })
     isactive!: number
 
-    @ManyToOne(() => Usuario, (usuario) => usuario.compras)
+    @ManyToOne("Usuario", (usuario: Usuario) => usuario.compras)
     @JoinColumn({ name: "idcomprador" })
     comprador!: Usuario
 
-    @ManyToOne(() => Usuario, (usuario) => usuario.ventas)
+    @ManyToOne("Usuario", (usuario: Usuario) => usuario.ventas)
     @JoinColumn({ name: "idvendedor" })
     vendedor!: Usuario
 
-    @ManyToOne(() => Producto, (producto) => producto.transacciones)
+    @ManyToOne("Producto", (producto: Producto) => producto.transacciones)
     @JoinColumn({ name: "idproducto" })
     producto!: Producto
 
@@ -51,6 +51,6 @@ export class Transaccion {
     @JoinColumn({ name: "idmetodopago" })
     metodopago!: MetodoPago
 
-    @OneToMany(() => Valoracion, (valoracion) => valoracion.transaccion)
+    @OneToMany("Valoracion", (valoracion: Valoracion) => valoracion.transaccion)
     valoraciones!: Valoracion[]
 }

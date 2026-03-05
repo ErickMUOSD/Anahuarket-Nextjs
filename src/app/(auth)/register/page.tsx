@@ -12,10 +12,29 @@ type RegisterFormValues = {
 
 export default function RegisterPage() {
 
-    const { register, handleSubmit , formState:{errors} } = useForm<RegisterFormValues>();
+    const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormValues>();
 
-    const onSubmit = handleSubmit(data => {
-        console.log(data)
+    const onSubmit = handleSubmit(async (data) => {
+
+        if (data.password != data.passwordConfirm) {
+            return alert("Las contraseñas no son iguales")
+        }
+
+        const res = await fetch('api/auth/register', {
+            method: 'POST',
+            body: JSON.stringify({
+                nombre: data.name,
+                correo: data.email,
+                telefono: data.tel,
+                contrasena: data.password
+            }),
+            headers: {
+                'Content-Type': 'applicaction/json'
+            }
+        })
+
+        const resJSON = await res.json();
+        console.log(resJSON)
     });
 
     console.log(errors)
