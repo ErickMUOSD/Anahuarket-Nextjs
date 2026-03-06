@@ -1,6 +1,6 @@
 'use client'
 
-import { registerUserAction } from "@/features/actions";
+import { registerUserAction } from "@/features/auth/actions";
 import { useState } from "react";
 import { useForm } from "react-hook-form"
 

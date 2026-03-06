@@ -10,7 +10,7 @@ import { EstadoTransaccion } from "./entities/EstadoTransaccion";
 
 const globalForDb = global as unknown as { AppDataSource: DataSource };
 
-export const AppDataSource = new DataSource({
+export const AppDataSource = globalForDb.AppDataSource ?? new DataSource({
     type: "postgres",
     host: process.env.DB_HOST,
     port: parseInt(process.env.DB_PORT || "5432"),
@@ -23,3 +23,10 @@ export const AppDataSource = new DataSource({
 })
 
 if (process.env.NODE_ENV !== "production") globalForDb.AppDataSource = AppDataSource;
+
+export const getDataSource = async () => {
+  if (!AppDataSource.isInitialized) {
+    await AppDataSource.initialize()
+  }
+  return AppDataSource
+}

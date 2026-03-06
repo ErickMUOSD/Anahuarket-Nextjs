@@ -1,16 +1,9 @@
-import { AppDataSource } from "../db/dataSource";
+import { registerSchema, RegisterInput } from "@/types/auth.types";
+import { getDataSource } from "../db/dataSource";
 import { Usuario } from "../db/entities/Usuarios";
 import bcrypt from "bcryptjs";
-import { z } from "zod";
 
-export const registerSchema = z.object({
-    nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-    correo: z.string().email("Correo no válido").endsWith("@anahuac.mx", "Debes usar tu correo institucional @anahuac.mx"),
-    telefono: z.string().min(7, "Teléfono no válido"),
-    contrasena: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
-});
 
-export type RegisterInput = z.infer<typeof registerSchema>;
 
 export async function registerUser(data: RegisterInput) {
     const parsed = registerSchema.safeParse(data)
@@ -22,11 +15,12 @@ export async function registerUser(data: RegisterInput) {
 
     const { nombre, correo, telefono, contrasena } = parsed.data;
 
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
+    const db = await getDataSource();
+    const repo = db.getRepository(Usuario)
     
-    const repo = AppDataSource.getRepository(Usuario);
+    const exist = await repo.findOneBy({correo})
+    if (exist) return { error: "El correo ya está registrado" }
+
     const hashedPassword = await bcrypt.hash(contrasena, 12);
     const newUser = repo.create({ nombre, correo, telefono, contrasena: hashedPassword });
     const saved = await repo.save(newUser);
