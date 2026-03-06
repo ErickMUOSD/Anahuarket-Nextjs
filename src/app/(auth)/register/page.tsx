@@ -1,5 +1,7 @@
 'use client'
 
+import { registerUserAction } from "@/features/actions";
+import { useState } from "react";
 import { useForm } from "react-hook-form"
 
 type RegisterFormValues = {
@@ -13,28 +15,21 @@ type RegisterFormValues = {
 export default function RegisterPage() {
 
     const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormValues>();
+    const [serverError, setServerError] = useState<string | undefined>(undefined);
 
     const onSubmit = handleSubmit(async (data) => {
 
-        if (data.password != data.passwordConfirm) {
-            return alert("Las contraseñas no son iguales")
+
+        const resJSON = await registerUserAction({
+            nombre: data.name,
+            correo: data.email,
+            telefono: data.tel,
+            contrasena: data.password
+        });
+
+        if ('error' in resJSON) {
+            return setServerError(resJSON.error);
         }
-
-        const res = await fetch('api/auth/register', {
-            method: 'POST',
-            body: JSON.stringify({
-                nombre: data.name,
-                correo: data.email,
-                telefono: data.tel,
-                contrasena: data.password
-            }),
-            headers: {
-                'Content-Type': 'applicaction/json'
-            }
-        })
-
-        const resJSON = await res.json();
-        console.log(resJSON)
     });
 
     console.log(errors)
@@ -86,7 +81,8 @@ export default function RegisterPage() {
                                             required: {
                                                 value: true,
                                                 message: "El correo institucional es necesario"
-                                            }
+                                            },
+                                            pattern: { value:/@anahuac\.mx$/, message: "Debes usar tu correo institucional @anahuac.mx" }
                                         })}
                                         placeholder="nombre.apellido@anahuac.mx"
                                         className="w-full px-5 py-4 mb-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all text-gray-700"
@@ -148,7 +144,11 @@ export default function RegisterPage() {
                                             required: {
                                                 value: true,
                                                 message: "Se debe de confirmar la contraseña"
-                                            }
+                                            },
+                                            validate: (
+                                                value,
+                                                formValue) =>
+                                                value === formValue.password || "Las contraseñasno no coinciden"
                                         })}
                                         placeholder="••••••••"
                                         className="w-full px-5 py-4 mb-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all text-gray-700"
@@ -160,6 +160,7 @@ export default function RegisterPage() {
                                     )}
                                 </div>
                             </div>
+
 
                             <div className="md:col-span-2 flex flex-col gap-4 pt-4">
                                 {/** error && (
@@ -190,7 +191,14 @@ export default function RegisterPage() {
                             </div>
 
                         </div>
+                        {serverError && (
+                            <div className="bg-red-50 text-red-600 p-4 mt-4 rounded-lg text-sm text-center font-semibold border border-red-100">
+                                {serverError}
+                            </div>
+                        )}
                     </form>
+
+
                 </div>
             </main>
 
