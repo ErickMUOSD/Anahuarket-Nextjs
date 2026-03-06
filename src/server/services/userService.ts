@@ -18,6 +18,9 @@ export async function registerUser(data: RegisterInput) {
     const db = await getDataSource();
     const repo = db.getRepository(Usuario)
 
+    const exist = await getUsersByEmail(parsed.data.correo);
+    if(exist) return { error: "El correo ya esta registrado"}
+    
     const hashedPassword = await bcrypt.hash(contrasena, 12);
     const newUser = repo.create({ nombre, correo, telefono, contrasena: hashedPassword });
     const saved = await repo.save(newUser);

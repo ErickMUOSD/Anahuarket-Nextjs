@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { Usuario } from './entities/Usuarios';
 import { Producto } from "./entities/Productos";

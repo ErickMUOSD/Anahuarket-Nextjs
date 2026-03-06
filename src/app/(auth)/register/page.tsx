@@ -1,8 +1,9 @@
 'use client'
 
 import { registerUserAction } from "@/features/auth/actions";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form"
+import { useForm } from "react-hook-form";
 
 type RegisterFormValues = {
     name: string;
@@ -14,8 +15,9 @@ type RegisterFormValues = {
 
 export default function RegisterPage() {
 
-    const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormValues>();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<RegisterFormValues>();
     const [serverError, setServerError] = useState<string | undefined>(undefined);
+    const router = useRouter();
 
     const onSubmit = handleSubmit(async (data) => {
 
@@ -28,8 +30,11 @@ export default function RegisterPage() {
         });
 
         if ('error' in resJSON) {
-            return setServerError(resJSON.error);
+            setServerError(resJSON.error);
+            reset();
+            return;
         }
+        router.push("/login")
     });
 
     console.log(errors)
