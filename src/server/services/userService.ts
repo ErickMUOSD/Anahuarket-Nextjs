@@ -17,13 +17,16 @@ export async function registerUser(data: RegisterInput) {
 
     const db = await getDataSource();
     const repo = db.getRepository(Usuario)
-    
-    const exist = await repo.findOneBy({correo})
-    if (exist) return { error: "El correo ya está registrado" }
 
     const hashedPassword = await bcrypt.hash(contrasena, 12);
     const newUser = repo.create({ nombre, correo, telefono, contrasena: hashedPassword });
     const saved = await repo.save(newUser);
 
     return {id: saved.id, correo: saved.correo};
+}
+
+export async function getUsersByEmail(correo: string) {
+  const db = await getDataSource()
+  const repo = db.getRepository(Usuario)
+  return repo.findOne({ where: { correo } })
 }
