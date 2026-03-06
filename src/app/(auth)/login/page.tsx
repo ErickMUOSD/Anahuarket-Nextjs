@@ -2,13 +2,36 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form"
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 
+
+type LoginFormValues = {
+  email: string,
+  password: string
+}
+
 export default function LoginPage() {
-  const [correo, setCorreo] = useState("");
-  const [contrasena, setContrasena] = useState("");
-  const [error, setError] = useState("");
+
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<LoginFormValues>();
   const router = useRouter();
+
+  const onSubmit = handleSubmit(async (data) =>{
+    console.log(data);
+    const resp = await signIn('credentials', {
+      correo: data.email,
+      contrasena: data.password,
+      redirect: false
+    });
+
+    if (resp?.error){
+      alert(resp.error)
+    }else{
+      router.push("/");
+    }
+    console.log(resp);
+  })
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 font-sans">
@@ -24,15 +47,18 @@ export default function LoginPage() {
             <p className="text-gray-500 mt-2">Ingresa tus credenciales para continuar</p>
           </div>
 
-          <form className="space-y-6">
+          <form onSubmit={onSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Correo Institucional</label>
               <input
                 type="email"
-                placeholder="nombre.apellido@anahuac.mx"
-                value={correo}
-                onChange={(e) => setCorreo(e.target.value)}
-                required
+                {...register("email", {
+                  required: {
+                    value: true,
+                    message: "El correo institucional es necesario"
+                  }
+                })}
+                placeholder="example@anahuac.mx"
                 className="w-full px-5 py-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all text-gray-700"
               />
             </div>
@@ -41,37 +67,40 @@ export default function LoginPage() {
               <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Contraseña</label>
               <input
                 type="password"
-                placeholder="••••••••"
-                value={contrasena}
-                onChange={(e) => setContrasena(e.target.value)}
-                required
+                {...register("password", {
+                  required: {
+                    value: true,
+                    message: " La contraseña es necesaria"
+                  }
+                })}
+                placeholder="*********"
                 className="w-full px-5 py-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all text-gray-700"
               />
             </div>
 
-            {error && (
+            {(errors.email || errors.password) && (
               <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm text-center font-semibold border border-red-100">
-                {error}
+                {errors.email?.message || errors.password?.message}
               </div>
             )}
 
             <div className="flex flex-col gap-4 pt-4">
-              {}
+              { }
               <button
                 type="submit"
                 className="w-full py-4 bg-[#FF6B00] hover:bg-[#e66000] text-white font-black rounded-xl transition-all transform hover:scale-[1.02] shadow-xl text-center"
               >
                 ENTRAR
               </button>
-              
+
               <div className="relative flex py-3 items-center">
                 <div className="flex-grow border-t border-gray-200"></div>
                 <span className="flex-shrink mx-4 text-gray-400 text-xs uppercase font-bold">o</span>
                 <div className="flex-grow border-t border-gray-200"></div>
               </div>
 
-              <Link 
-                href="/registro" 
+              <Link
+                href="/register"
                 className="w-full py-4 bg-white border-2 border-gray-200 hover:border-[#FF6B00] text-gray-700 font-bold rounded-xl text-center transition-all"
               >
                 CREAR CUENTA
