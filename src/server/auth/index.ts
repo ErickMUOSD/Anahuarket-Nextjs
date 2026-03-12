@@ -1,4 +1,3 @@
-import "reflect-metadata"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
@@ -15,21 +14,26 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         contrasena: { label: "Contraseña", type: "password" }
       },
       async authorize(credentials) {
-        if (!credentials?.correo || !credentials?.contrasena) return null
+        try {
+          if (!credentials?.correo || !credentials?.contrasena) return null
 
-        const usuario = await getUsersByEmail(credentials.correo as string)
-        if (!usuario) return null
+          const usuario = await getUsersByEmail(credentials.correo as string)
+          if (!usuario) return null
 
-        const passwordValida = await bcrypt.compare(
-          credentials.contrasena as string,
-          usuario.contrasena
-        )
-        if (!passwordValida) return null
+          const passwordValida = await bcrypt.compare(
+            credentials.contrasena as string,
+            usuario.contrasena
+          )
+          if (!passwordValida) return null
 
-        return {
-          id: String(usuario.id),
-          name: usuario.nombre,
-          email: usuario.correo,
+          return {
+            id: String(usuario.id),
+            name: usuario.nombre,
+            email: usuario.correo,
+          }
+        } catch (error) {
+          console.error("[authorize] Error al autenticar:", error)
+          return null
         }
       }
     })
