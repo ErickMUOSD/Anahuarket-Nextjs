@@ -27,6 +27,7 @@ export default function LoginPage() {
 
     if (resp?.error){
       alert(resp.error)
+      console.log(resp.error)
     }else{
       router.push("/");
     }
