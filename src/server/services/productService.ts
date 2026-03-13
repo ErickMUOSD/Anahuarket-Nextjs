@@ -32,3 +32,13 @@ export async function getProductsPicture(id: number) {
     select: { fotoproducto: true }
   })
 }
+
+export async function getProductsById(id: number) {
+  return prisma.producto.findMany({
+    where: {idproducto: id, isactive: 1},
+    include:{
+      vendedor: { select: { nombre: true } },
+      categoria: { select: { nombrecategoria: true } },
+    }
+  })
+}

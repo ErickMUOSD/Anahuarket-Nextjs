@@ -22,7 +22,6 @@ export default async function DetalleProductoPage({
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Header nombreUsuario={session?.user?.name} />
 
       <main className="flex-grow max-w-7xl mx-auto w-full px-6 py-10">
 
@@ -109,7 +108,6 @@ export default async function DetalleProductoPage({
         </div>
       </main>
 
-      <Footer />
     </div>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { registerUserAction } from "@/features/auth/actions";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -87,7 +88,7 @@ export default function RegisterPage() {
                                                 value: true,
                                                 message: "El correo institucional es necesario"
                                             },
-                                            pattern: { value:/@anahuac\.mx$/, message: "Debes usar tu correo institucional @anahuac.mx" }
+                                            pattern: { value: /@anahuac\.mx$/, message: "Debes usar tu correo institucional @anahuac.mx" }
                                         })}
                                         placeholder="nombre.apellido@anahuac.mx"
                                         className="w-full px-5 py-4 mb-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all text-gray-700"
@@ -188,11 +189,12 @@ export default function RegisterPage() {
                                     <div className="flex-grow border-t border-gray-200"></div>
                                 </div>
 
-                                <button
+                                <Link
+                                    href="/login"
                                     className="w-full py-4 bg-white border-2 border-gray-200 hover:border-[#FF6B00] text-gray-700 font-bold rounded-xl text-center transition-all"
                                 >
-                                    INICIAR SESIÓN
-                                </button>
+                                    INICIAR SESION
+                                </Link>
                             </div>
 
                         </div>
