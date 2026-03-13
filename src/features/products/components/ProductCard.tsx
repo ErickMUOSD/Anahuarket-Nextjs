@@ -1,12 +1,6 @@
-type Props = {
-  idproducto: number
-  nombreproducto: string
-  precio: number
-  fotoproducto: boolean
-  vendedor: { nombre: string }
-}
+import type { ProductDTO } from "@/types/product.types"
 
-export default function ProductCard({ idproducto, nombreproducto, precio, fotoproducto, vendedor }: Props) {
+export default function ProductCard({ idproducto, nombreproducto, precio, fotoproducto, vendedor }: ProductDTO) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer">
       <div className="h-44 bg-gray-100 overflow-hidden">
