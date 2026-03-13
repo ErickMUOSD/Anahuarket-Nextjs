@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form"
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useState } from "react";
 
 
 type LoginFormValues = {
@@ -14,7 +14,8 @@ type LoginFormValues = {
 
 export default function LoginPage() {
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<LoginFormValues>();
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>();
+  const [serverError, setServerError] = useState<string | null>(null)
   const router = useRouter();
 
   const onSubmit = handleSubmit(async (data) =>{
@@ -26,12 +27,10 @@ export default function LoginPage() {
     });
 
     if (resp?.error){
-      alert(resp.error)
-      console.log(resp.error)
+      setServerError("Correo o contraseña incorrectos");
     }else{
       router.push("/");
     }
-    console.log(resp);
   })
 
   return (
@@ -79,9 +78,9 @@ export default function LoginPage() {
               />
             </div>
 
-            {(errors.email || errors.password) && (
+            {(errors.email || errors.password || serverError) && (
               <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm text-center font-semibold border border-red-100">
-                {errors.email?.message || errors.password?.message}
+                {errors.email?.message || errors.password?.message || serverError}
               </div>
             )}
 
