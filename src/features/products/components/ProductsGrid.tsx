@@ -4,20 +4,12 @@ import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import Navbar from "@/components/Navbar"
 import ProductCard from "./ProductCard"
+import type { ProductDTO } from "@/types/product.types"
 
 const CATEGORIAS = ["Todos", "Comida", "Eventos", "Tecnología", "Hogar", "Servicios", "Ropa", "Otros"]
 
-type Producto = {
-  idproducto: number
-  nombreproducto: string
-  precio: number
-  fotoproducto: boolean
-  vendedor: { nombre: string }
-  categoria: { nombrecategoria: string }
-}
-
 type Props = {
-  productos: Producto[]
+  productos: ProductDTO[]
   nombreUsuario: string | null | undefined
 }
 
