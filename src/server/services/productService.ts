@@ -17,6 +17,7 @@ export async function getProductById(id: number) {
     where: { idproducto: id },
     select: {
       idproducto: true,
+      idusuario: true,
       nombreproducto: true,
       precio: true,
       fotoproducto: true,

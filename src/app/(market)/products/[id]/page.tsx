@@ -1,10 +1,9 @@
 import { getProductById } from "@/server/services/productService"
 import { auth } from "@/server/auth"
-import Header from "@/components/Header"
-import Footer from "@/components/Footer"
 import { ArrowLeft, Phone } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import BuyForm from "@/features/products/components/BuyForm"
 
 export default async function DetalleProductoPage({
   params
@@ -20,12 +19,12 @@ export default async function DetalleProductoPage({
 
   if (!producto) notFound()
 
+  const esVendedor = Number(session?.user?.id) === producto.idusuario
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-
       <main className="flex-grow max-w-7xl mx-auto w-full px-6 py-10">
 
-        {/* Volver */}
         <Link
           href="/"
           className="flex items-center gap-2 text-gray-500 hover:text-[#FF6B00] transition-colors text-sm mb-8"
@@ -40,23 +39,11 @@ export default async function DetalleProductoPage({
           <div className="w-full md:w-1/2">
             <div className="rounded-2xl overflow-hidden bg-gray-100 h-96">
               {producto.fotourl ? (
-                <img
-                  src={producto.fotourl}
-                  alt={producto.nombreproducto}
-                  className="w-full h-full object-cover"
-                />
+                <img src={producto.fotourl} alt={producto.nombreproducto} className="w-full h-full object-cover" />
               ) : producto.fotoproducto ? (
-                <img
-                  src={`/api/productos/${producto.idproducto}/foto`}
-                  alt={producto.nombreproducto}
-                  className="w-full h-full object-cover"
-                />
+                <img src={`/api/productos/${producto.idproducto}/foto`} alt={producto.nombreproducto} className="w-full h-full object-cover" />
               ) : (
-                <img
-                  src="/placeholder.png"
-                  alt="Sin imagen"
-                  className="w-full h-full object-cover"
-                />
+                <img src="/placeholder.png" alt="Sin imagen" className="w-full h-full object-cover" />
               )}
             </div>
           </div>
@@ -78,9 +65,7 @@ export default async function DetalleProductoPage({
 
               {/* Nombre y precio */}
               <div>
-                <h1 className="text-3xl font-black text-gray-800 uppercase">
-                  {producto.nombreproducto}
-                </h1>
+                <h1 className="text-3xl font-black text-gray-800 uppercase">{producto.nombreproducto}</h1>
                 <p className="text-3xl text-[#FF6B00] font-black mt-2">
                   ${Number(producto.precio).toLocaleString('es-MX')}
                 </p>
@@ -109,11 +94,23 @@ export default async function DetalleProductoPage({
                 </div>
               </div>
 
+              {/* Formulario de compra */}
+              {!esVendedor ? (
+                <BuyForm
+                  idproducto={producto.idproducto}
+                  precio={Number(producto.precio)}
+                  stock={producto.stock}
+                />
+              ) : (
+                <div className="bg-orange-50 text-[#FF6B00] p-3 rounded-xl text-sm text-center font-semibold border border-orange-100">
+                  Este es tu producto
+                </div>
+              )}
+
             </div>
           </div>
         </div>
       </main>
-
     </div>
   )
 }
