@@ -33,6 +33,7 @@ export default async function ProfilePage({
     producto: {
       ...v.producto,
       fotoproducto: v.producto.fotoproducto ? true : false,
+      fotourl: v.producto.fotourl ?? null,
     }
   }))
 
@@ -43,6 +44,7 @@ export default async function ProfilePage({
     producto: {
       ...t.producto,
       fotoproducto: t.producto.fotoproducto ? true : false,
+      fotourl: t.producto.fotourl ?? null,
     }
   }))
 
@@ -134,7 +136,13 @@ export default async function ProfilePage({
                   className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col md:flex-row md:items-center gap-4"
                 >
                   <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                    {t.producto.fotoproducto ? (
+                    {t.producto.fotourl ? (
+                      <img
+                        src={t.producto.fotourl}
+                        alt={t.producto.nombreproducto}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : t.producto.fotoproducto ? (
                       <img
                         src={`/api/productos/${t.producto.idproducto}/foto`}
                         alt={t.producto.nombreproducto}

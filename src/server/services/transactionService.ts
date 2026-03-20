@@ -31,7 +31,7 @@ export async function getTransactionsByUser(idcomprador: number) {
   return prisma.transaccion.findMany({
     where: { idcomprador, isactive: 1 },
     include: {
-      producto: { select: { nombreproducto: true, fotoproducto: true, idproducto: true } },
+      producto: { select: { nombreproducto: true, fotoproducto: true, fotourl: true, idproducto: true } },
       metodopago: { select: { nombremetodopago: true } },
       estado: { select: { estado: true } },
       vendedor: { select: { nombre: true } },
@@ -48,7 +48,7 @@ export async function getSalesByUser(idvendedor: number) {
       idestado: { in: [1, 2] }
     },
     include: {
-      producto: { select: { nombreproducto: true, fotoproducto: true, idproducto: true } },
+      producto: { select: { nombreproducto: true, fotoproducto: true, fotourl: true, idproducto: true } },
       metodopago: { select: { nombremetodopago: true } },
       estado: { select: { estado: true } },
       comprador: { select: { nombre: true } },
