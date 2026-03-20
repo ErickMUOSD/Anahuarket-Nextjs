@@ -39,7 +39,13 @@ export default async function DetalleProductoPage({
           {/* Foto */}
           <div className="w-full md:w-1/2">
             <div className="rounded-2xl overflow-hidden bg-gray-100 h-96">
-              {producto.fotoproducto ? (
+              {producto.fotourl ? (
+                <img
+                  src={producto.fotourl}
+                  alt={producto.nombreproducto}
+                  className="w-full h-full object-cover"
+                />
+              ) : producto.fotoproducto ? (
                 <img
                   src={`/api/productos/${producto.idproducto}/foto`}
                   alt={producto.nombreproducto}

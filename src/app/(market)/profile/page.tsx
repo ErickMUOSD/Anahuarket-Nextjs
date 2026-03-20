@@ -1,13 +1,13 @@
 import { auth } from "@/server/auth"
 import Link from "next/link";
-import { getProductsById } from "@/server/services/productService";
+import { getProductsByUser } from "@/server/services/productService";
 import ProductsGrid from '@/features/products/components/ProductsGrid';
 
-export default async function PorfilePage() {
+export default async function ProfilePage() {
 
     const session = await auth()
 
-    const product = await getProductsById(Number(session?.user?.id))
+    const product = await getProductsByUser(Number(session?.user?.id))
 
     const productosSerialized = product.map((prod) => ({
         ...prod,

@@ -1,18 +1,10 @@
 "use client"
 
 import ProductCard from "./ProductCard"
-
-type Producto = {
-  idproducto: number
-  nombreproducto: string
-  precio: number
-  fotoproducto: boolean
-  vendedor: { nombre: string }
-  categoria: { nombrecategoria: string }
-}
+import type { ProductCardDTO } from "@/types/product.types"
 
 type Props = {
-  products: Producto[]
+  products: ProductCardDTO[]
   userName: string | null | undefined
 }
 
