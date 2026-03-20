@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs"
 import { getUsersByEmail } from "@/server/services/userService"
 import { authConfig } from "./authConfig"
 
-export const { auth, signIn, signOut, handlers } = NextAuth({
+export const { auth, signIn, signOut, handlers, unstable_update } = NextAuth({
   ...authConfig,
   providers: [
     CredentialsProvider({

@@ -2,9 +2,9 @@
 
 import { registerUser } from "@/server/services/userService";
 import { RegisterInput, UpdateUserInput } from "@/types/auth.types";
-import { auth } from "@/server/auth";
 import { updateUser } from "@/server/services/userService";
 import { redirect } from "next/navigation";
+import { auth, unstable_update } from "@/server/auth";
 
 export async function registerUserAction(data: RegisterInput) {
     return registerUser(data);
@@ -15,7 +15,11 @@ export async function updateUserAction(data: UpdateUserInput) {
   if (!session?.user?.id) redirect("/login")
 
   const result = await updateUser(Number(session.user.id), data)
-  if (result?.error) return { error: result.error }
+  if (result && 'error' in result) return { error: result.error }
 
-  redirect("/profile")
+  if (data.nombre) {
+    await unstable_update({ user: { name: data.nombre } })
+  }
+
+  return { success: true }
 }

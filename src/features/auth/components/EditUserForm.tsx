@@ -3,14 +3,16 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import Link from "next/link";
 import { UpdateUserInput } from "@/types/auth.types";
+import { useRouter } from "next/navigation";
 
 type Props = {
   defaultNombre: string
   defaultTelefono: string
-  updateUserAction: (data: UpdateUserInput) => Promise<{ error: string } | void>
+  updateUserAction: (data: UpdateUserInput) => Promise<{ error: string | undefined } | { success: boolean } | void>
 }
 
 export default function EditUserForm({ defaultNombre, defaultTelefono, updateUserAction }: Props) {
+  const router = useRouter()
   const { register, handleSubmit, formState: { errors } } = useForm<UpdateUserInput>({
     defaultValues: {
       nombre: defaultNombre,
@@ -24,9 +26,11 @@ export default function EditUserForm({ defaultNombre, defaultTelefono, updateUse
     setServerError(null)
     setLoading(true)
     const result = await updateUserAction(data)
-    if (result?.error) {
-      setServerError(result.error)
+    if (result && 'error' in result) {
+      setServerError(result.error || "Error desconocido")
       setLoading(false)
+    } else {
+      router.push("/profile?updated=true")
     }
   })
 
