@@ -20,7 +20,7 @@ export default function RegisterPage() {
     const [serverError, setServerError] = useState<string | undefined>(undefined);
     const router = useRouter();
 
-    const onSubmit = handleSubmit(async (data) => {
+    const onSubmitHandler = handleSubmit(async (data) => {
 
 
         const resJSON = await registerUserAction({
@@ -55,7 +55,7 @@ export default function RegisterPage() {
                         <p className="text-gray-500 mt-2">Ingresa tus credenciales para continuar</p>
                     </div>
 
-                    <form onSubmit={onSubmit}>
+                    <form onSubmit={onSubmitHandler}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
 
                             <div className="space-y-6">
