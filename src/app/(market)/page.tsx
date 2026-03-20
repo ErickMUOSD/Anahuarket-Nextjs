@@ -1,4 +1,3 @@
-// src/app/(market)/page.tsx
 import { getProducts } from "@/server/services/productService"
 import { auth } from "@/server/auth"
 import ProductsGrid from "@/features/products/components/ProductsGrid"

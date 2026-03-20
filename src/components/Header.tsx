@@ -22,7 +22,7 @@ export default function Header({ nombreUsuario }: Props) {
       params.delete("search")
     }
     router.replace(`/?${params.toString()}`)
-     setInputValue("")
+    setInputValue("")
     setMobileSearchOpen(false)
   }
 
@@ -31,7 +31,6 @@ export default function Header({ nombreUsuario }: Props) {
       <header className="bg-[#FF6B00] px-6 py-3 flex items-center justify-between sticky top-0 z-10 shadow-md">
         <span className="text-white font-black text-xl tracking-tight">ANAHUARKET</span>
 
-        {/* Desktop — barra normal */}
         <div className="hidden md:flex items-center w-96 bg-white rounded-full px-4 py-2 gap-2">
           <Search className="h-4 w-4 text-gray-400" />
           <input
@@ -45,7 +44,6 @@ export default function Header({ nombreUsuario }: Props) {
         </div>
 
         <div className="flex items-center gap-4">
-          {/* Mobile — solo la lupa */}
           <button
             onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
             className="md:hidden text-white hover:text-orange-200 transition-colors"
@@ -65,7 +63,6 @@ export default function Header({ nombreUsuario }: Props) {
         </div>
       </header>
 
-      {/* Mobile — barra que aparece debajo del header */}
       {mobileSearchOpen && (
         <div className="md:hidden bg-[#FF6B00] px-4 pb-3 pt-1 sticky top-13 z-10 flex justify-center">
           <div className="flex items-center bg-white rounded-full px-4 py-2 gap-2 w-full max-w-sm shadow-lg">
