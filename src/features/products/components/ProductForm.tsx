@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { CldUploadWidget } from "next-cloudinary"
 import { createProductAction } from "@/features/products/actions"
-import type { CreateProductDTO } from "@/types/product.types"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { createProductSchema, type ProductFormValues, type CreateProductDTO } from "@/types/product.types"
 
 type Categoria = {
   idcategoria: number
@@ -27,7 +28,9 @@ export default function ProductForm({ categorias, disponibilidades, userId }: Pr
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<CreateProductDTO>()
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ProductFormValues>({
+    resolver: zodResolver(createProductSchema)
+  })
 
   const onSubmit = handleSubmit(async (data) => {
     const result = await createProductAction({
@@ -91,8 +94,8 @@ export default function ProductForm({ categorias, disponibilidades, userId }: Pr
           <input
             type="text"
             placeholder="Ej. Bata de Laboratorio"
-            {...register("nombreproducto", { required: "El nombre es requerido" })}
-            className="w-full px-5 py-4 rounded-2xl border-2 border-gray-50 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all"
+            {...register("nombreproducto")}
+            className="w-full px-5 py-4 rounded-2xl border-2 border-gray-50 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all text-gray-800"
           />
           {errors.nombreproducto && (
             <p className="text-red-500 text-xs mt-1 ml-1">{errors.nombreproducto.message}</p>
@@ -103,8 +106,8 @@ export default function ProductForm({ categorias, disponibilidades, userId }: Pr
           <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Descripción</label>
           <textarea
             placeholder="Estado del producto, lugar de entrega..."
-            {...register("descripcion", { required: "La descripción es requerida" })}
-            className="w-full px-5 py-4 rounded-2xl border-2 border-gray-50 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all h-24 resize-none"
+            {...register("descripcion")}
+            className="w-full px-5 py-4 rounded-2xl border-2 border-gray-50 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all h-24 resize-none text-gray-800"
           />
           {errors.descripcion && (
             <p className="text-red-500 text-xs mt-1 ml-1">{errors.descripcion.message}</p>
@@ -115,8 +118,8 @@ export default function ProductForm({ categorias, disponibilidades, userId }: Pr
           <div>
             <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Categoría</label>
             <select
-              {...register("idcategoria", { required: "Selecciona una categoría" })}
-              className="w-full px-5 py-4 rounded-2xl border-2 border-gray-50 bg-gray-50 focus:border-[#FF6B00] outline-none appearance-none"
+              {...register("idcategoria", { valueAsNumber: true })}
+              className="w-full px-5 py-4 rounded-2xl border-2 border-gray-50 bg-gray-50 focus:border-[#FF6B00] outline-none appearance-none text-gray-800"
             >
               <option value="">Seleccionar</option>
               {categorias.map((cat) => (
@@ -129,8 +132,8 @@ export default function ProductForm({ categorias, disponibilidades, userId }: Pr
 
             <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 mt-4">Disponibilidad</label>
             <select
-              {...register("iddisponibilidad", { required: "Selecciona una disponibilidad" })}
-              className="w-full px-5 py-4 rounded-2xl border-2 border-gray-50 bg-gray-50 focus:border-[#FF6B00] outline-none appearance-none"
+              {...register("iddisponibilidad", { valueAsNumber: true  })}
+              className="w-full px-5 py-4 rounded-2xl border-2 border-gray-50 bg-gray-50 focus:border-[#FF6B00] outline-none appearance-none text-gray-800"
             >
               <option value="">Seleccionar</option>
               {disponibilidades.map((d) => (
@@ -146,11 +149,8 @@ export default function ProductForm({ categorias, disponibilidades, userId }: Pr
             <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Precio ($)</label>
             <input
               type="number"
-              {...register("precio", {
-                required: "El precio es requerido",
-                min: { value: 0.01, message: "El precio debe ser mayor a 0" }
-              })}
-              className="w-full px-5 py-4 rounded-2xl border-2 border-gray-50 bg-gray-50 focus:border-[#FF6B00] outline-none transition-all"
+              {...register("precio", { valueAsNumber: true })}
+              className="w-full px-5 py-4 rounded-2xl border-2 border-gray-50 bg-gray-50 focus:border-[#FF6B00] outline-none transition-all text-gray-800"
               min="0"
               step="0.01"
             />
@@ -161,11 +161,8 @@ export default function ProductForm({ categorias, disponibilidades, userId }: Pr
             <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 mt-4">Stock</label>
             <input
               type="number"
-              {...register("stock", {
-                required: "El stock es requerido",
-                min: { value: 0, message: "El stock no puede ser negativo" }
-              })}
-              className="w-full px-5 py-4 rounded-2xl border-2 border-gray-50 bg-gray-50 focus:border-[#FF6B00] outline-none transition-all"
+              {...register("stock", { valueAsNumber: true })}
+              className="w-full px-5 py-4 rounded-2xl border-2 border-gray-50 bg-gray-50 focus:border-[#FF6B00] outline-none transition-all text-gray-800"
               min="0"
               step="1"
             />
