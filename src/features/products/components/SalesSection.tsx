@@ -9,7 +9,7 @@ type Transaccion = {
   preciototal: number
   fechatransaccion: string
   idestado: number
-  producto: { nombreproducto: string, fotoproducto: boolean, idproducto: number }
+  producto: { nombreproducto: string, fotoproducto: boolean, fotourl: string | null, idproducto: number }
   metodopago: { nombremetodopago: string }
   estado: { estado: string }
   comprador: { nombre: string }
@@ -72,7 +72,13 @@ export default function SalesSection({ ventas }: Props) {
               >
                 {/* Foto */}
                 <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                  {v.producto.fotoproducto ? (
+                  {v.producto.fotourl ? (
+                    <img
+                      src={v.producto.fotourl}
+                      alt={v.producto.nombreproducto}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : v.producto.fotoproducto ? (
                     <img
                       src={`/api/productos/${v.producto.idproducto}/foto`}
                       alt={v.producto.nombreproducto}
@@ -151,7 +157,13 @@ export default function SalesSection({ ventas }: Props) {
               >
                 {/* Foto */}
                 <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                  {v.producto.fotoproducto ? (
+                  {v.producto.fotourl ? (
+                    <img
+                      src={v.producto.fotourl}
+                      alt={v.producto.nombreproducto}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : v.producto.fotoproducto ? (
                     <img
                       src={`/api/productos/${v.producto.idproducto}/foto`}
                       alt={v.producto.nombreproducto}
