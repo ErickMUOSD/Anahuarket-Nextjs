@@ -1,16 +1,23 @@
 import { auth } from "@/server/auth"
 import Link from "next/link";
 import { getProductsByUser } from "@/server/services/productService";
+import { getTransactionsByUser, getSalesByUser } from "@/server/services/transactionService";
 import ProductsGrid from '@/features/products/components/ProductsGrid';
+import SalesSection from '@/features/products/components/SalesSection';
 
 export default async function ProfilePage({
   searchParams
 }: {
-  searchParams: Promise<{ updated?: string }>
+  searchParams: Promise<{ updated?: string, purchased?: string }>
 }) {
-  const { updated } = await searchParams
+  const { updated, purchased } = await searchParams
   const session = await auth()
-  const product = await getProductsByUser(Number(session?.user?.id))
+
+  const [product, transactions, ventas] = await Promise.all([
+    getProductsByUser(Number(session?.user?.id)),
+    getTransactionsByUser(Number(session?.user?.id)),
+    getSalesByUser(Number(session?.user?.id))
+  ])
 
   const productosSerialized = product.map((prod) => ({
     ...prod,
@@ -19,16 +26,43 @@ export default async function ProfilePage({
     fechapublicacion: prod.fechapublicacion.toISOString(),
   }))
 
+  const ventasSerialized = ventas.map((v) => ({
+    ...v,
+    preciototal: Number(v.preciototal),
+    fechatransaccion: v.fechatransaccion.toISOString(),
+    producto: {
+      ...v.producto,
+      fotoproducto: v.producto.fotoproducto ? true : false,
+    }
+  }))
+
+  const transactionsSerialized = transactions.map((t) => ({
+    ...t,
+    preciototal: Number(t.preciototal),
+    fechatransaccion: t.fechatransaccion.toISOString(),
+    producto: {
+      ...t.producto,
+      fotoproducto: t.producto.fotoproducto ? true : false,
+    }
+  }))
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <main className="flex-grow max-w-7xl mx-auto w-full p-6">
 
+        {/* Mensajes */}
         {updated && (
           <div className="bg-green-50 text-green-600 p-3 rounded-lg text-sm text-center font-semibold border border-green-100 mb-6">
             Perfil actualizado. Los cambios de nombre se verán al cerrar sesión y volver a entrar.
           </div>
         )}
+        {purchased && (
+          <div className="bg-green-50 text-green-600 p-3 rounded-lg text-sm text-center font-semibold border border-green-100 mb-6">
+            ¡Compra realizada con éxito!
+          </div>
+        )}
 
+        {/* Info del usuario */}
         <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 mb-10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
@@ -39,7 +73,6 @@ export default async function ProfilePage({
                 {session?.user?.name || "Francisco García"}
               </h1>
             </div>
-
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/agregar-producto"
@@ -57,7 +90,8 @@ export default async function ProfilePage({
           </div>
         </section>
 
-        <section>
+        {/* Mis productos */}
+        <section className="mb-10">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-black text-gray-800 uppercase tracking-tighter">
               Mis Productos en Venta
@@ -70,6 +104,71 @@ export default async function ProfilePage({
             products={productosSerialized}
             userName={session?.user?.name}
           />
+        </section>
+
+        {/* Ventas y historial de ventas */}
+        <section className="mb-10">
+          <SalesSection ventas={ventasSerialized} />
+        </section>
+
+        {/* Historial de compras */}
+        <section>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-black text-gray-800 uppercase tracking-tighter">
+              Historial de Compras
+            </h2>
+            <span className="bg-orange-100 text-[#FF6B00] px-4 py-1 rounded-full text-xs font-bold">
+              {transactionsSerialized.length} COMPRAS
+            </span>
+          </div>
+
+          {transactionsSerialized.length === 0 ? (
+            <div className="text-center py-10">
+              <p className="text-gray-400">No has realizado ninguna compra aún.</p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {transactionsSerialized.map((t) => (
+                <div
+                  key={t.idtransaccion}
+                  className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col md:flex-row md:items-center gap-4"
+                >
+                  <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 shrink-0">
+                    {t.producto.fotoproducto ? (
+                      <img
+                        src={`/api/productos/${t.producto.idproducto}/foto`}
+                        alt={t.producto.nombreproducto}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <img src="/placeholder.png" alt="Sin imagen" className="w-full h-full object-cover" />
+                    )}
+                  </div>
+
+                  <div className="flex-grow">
+                    <p className="font-black text-gray-800">{t.producto.nombreproducto}</p>
+                    <p className="text-sm text-gray-400">Vendedor: {t.vendedor.nombre}</p>
+                    <p className="text-sm text-gray-400">
+                      {new Date(t.fechatransaccion).toLocaleDateString('es-MX', {
+                        year: 'numeric', month: 'long', day: 'numeric'
+                      })}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col items-end gap-1">
+                    <p className="text-[#FF6B00] font-black text-lg">
+                      ${Number(t.preciototal).toLocaleString('es-MX')}
+                    </p>
+                    <p className="text-xs text-gray-400">Cantidad: {t.cantidad}</p>
+                    <p className="text-xs text-gray-400">{t.metodopago.nombremetodopago}</p>
+                    <span className="bg-orange-100 text-[#FF6B00] px-3 py-1 rounded-full text-xs font-bold">
+                      {t.estado.estado}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </section>
 
       </main>
