@@ -1,5 +1,5 @@
 import { prisma } from "@/server/db/db";
-import { registerSchema, RegisterInput } from "@/types/auth.types";
+import { registerSchema, RegisterInput, UpdateUserInput, updateUserSchema } from "@/types/auth.types";
 import bcrypt from "bcryptjs";
 
 export async function registerUser(data: RegisterInput) {
@@ -32,4 +32,35 @@ export async function registerUser(data: RegisterInput) {
 
 export async function getUsersByEmail(correo: string) {
   return prisma.usuario.findUnique({ where: { correo } });
+}
+
+export async function getUserById(id: number) {
+  return prisma.usuario.findUnique({
+    where: { idusuario: id },
+    select: { nombre: true, telefono: true }
+  })
+}
+
+export async function updateUser(id: number, data: UpdateUserInput) {
+  const parsed = updateUserSchema.safeParse(data)
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message }
+  }
+
+  const updateData: any = {}
+
+  if (parsed.data.nombre) updateData.nombre = parsed.data.nombre
+  if (parsed.data.telefono) updateData.telefono = parsed.data.telefono
+  if (parsed.data.contrasena) updateData.contrasena = await bcrypt.hash(parsed.data.contrasena, 12)
+
+  if (Object.keys(updateData).length === 0) {
+    return { error: "No hay cambios que guardar" }
+  }
+
+  await prisma.usuario.update({
+    where: { idusuario: id },
+    data: updateData
+  })
+
+  return { ok: true }
 }
