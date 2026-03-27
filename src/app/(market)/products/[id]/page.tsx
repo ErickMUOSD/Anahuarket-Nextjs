@@ -3,6 +3,7 @@ import { auth } from "@/server/auth"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import Image from "next/image"
 import InteresForm from "@/features/products/components/InteresForm"
 
 export default async function DetalleProductoPage({
@@ -37,13 +38,13 @@ export default async function DetalleProductoPage({
 
           {/* Foto */}
           <div className="w-full md:w-1/2">
-            <div className="rounded-2xl overflow-hidden bg-gray-100 h-96">
+            <div className="rounded-2xl overflow-hidden bg-gray-100 h-96 relative">
               {producto.fotourl ? (
-                <img src={producto.fotourl} alt={producto.nombreproducto} className="w-full h-full object-cover" />
+                <Image src={producto.fotourl} alt={producto.nombreproducto} fill className="object-cover" />
               ) : producto.fotoproducto ? (
-                <img src={`/api/productos/${producto.idproducto}/foto`} alt={producto.nombreproducto} className="w-full h-full object-cover" />
+                <Image src={`/api/productos/${producto.idproducto}/foto`} alt={producto.nombreproducto} fill className="object-cover" />
               ) : (
-                <img src="/placeholder.png" alt="Sin imagen" className="w-full h-full object-cover" />
+                <Image src="/placeholder.png" alt="Sin imagen" fill className="object-cover" />
               )}
             </div>
           </div>

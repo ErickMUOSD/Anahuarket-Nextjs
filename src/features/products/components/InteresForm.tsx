@@ -21,8 +21,9 @@ export default function InteresForm({ idproducto, precio, stock }: Props) {
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [telefonoVendedor, setTelefonoVendedor] = useState<string | null>(null)
+  const [showModal, setShowModal] = useState(false)
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<CreateTransactionInput>({
+  const { register, handleSubmit, watch, formState: { errors }, getValues } = useForm<CreateTransactionInput>({
     defaultValues: {
       idproducto,
       cantidad: 1,
@@ -37,9 +38,15 @@ export default function InteresForm({ idproducto, precio, stock }: Props) {
     getMetodosPagoAction().then(setMetodosPago)
   }, [])
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(() => {
+    setShowModal(true)
+  })
+
+  const handleConfirm = async () => {
+    setShowModal(false)
     setServerError(null)
     setLoading(true)
+    const data = getValues()
     const result = await createTransactionAction(data)
     if (result?.error) {
       setServerError(result.error)
@@ -49,7 +56,7 @@ export default function InteresForm({ idproducto, precio, stock }: Props) {
       setTelefonoVendedor(result.telefonoVendedor || null)
       setLoading(false)
     }
-  })
+  }
 
   if (submitted && telefonoVendedor) {
     return (
@@ -62,7 +69,8 @@ export default function InteresForm({ idproducto, precio, stock }: Props) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4 mt-6">
+    <>
+      <form onSubmit={onSubmit} className="flex flex-col gap-4 mt-6">
 
       {/* Cantidad */}
       <div>
@@ -128,9 +136,42 @@ export default function InteresForm({ idproducto, precio, stock }: Props) {
         disabled={loading}
         className="w-full py-4 bg-[#FF6B00] hover:bg-[#e66000] text-white font-black rounded-xl transition-all shadow-xl disabled:opacity-50"
       >
-        {loading ? "ENVIANDO SOLICITUD..." : "ME INTERESA"}
+        {loading ? "ENVIANDO SOLICITUD..." : "CONTACTAR VENDEDOR"}
       </button>
 
     </form>
+
+    {/* Modal de confirmación */}
+    {showModal && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
+          <h3 className="text-xl font-black text-gray-800 mb-4">Confirmar Interés</h3>
+          <p className="text-gray-600 mb-4">
+            Al confirmar, se notificará al vendedor y se te mostrará su contacto para coordinar la entrega.
+          </p>
+          <div className="bg-gray-50 rounded-xl p-4 mb-4">
+            <p className="text-sm text-gray-600">Cantidad: {cantidad}</p>
+            <p className="text-sm text-gray-600">Método de pago: {metodosPago.find(m => m.idmetodopago === getValues("idmetodopago"))?.nombremetodopago || "No seleccionado"}</p>
+            <p className="text-sm text-gray-600">Precio por unidad: ${precio.toLocaleString('es-MX')}</p>
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowModal(false)}
+              className="flex-1 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-xl transition-all"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleConfirm}
+              disabled={loading}
+              className="flex-1 py-3 bg-[#FF6B00] hover:bg-[#e66000] text-white font-semibold rounded-xl transition-all disabled:opacity-50"
+            >
+              {loading ? "Enviando..." : "Confirmar"}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   )
 }

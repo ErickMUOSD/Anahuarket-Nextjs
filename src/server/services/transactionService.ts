@@ -58,6 +58,21 @@ export async function getSalesByUser(idvendedor: number) {
 }
 
 export async function updateTransactionStatus(idtransaccion: number, idestado: number) {
+  const transaction = await prisma.transaccion.findUnique({
+    where: { idtransaccion },
+    select: { cantidad: true, idproducto: true }
+  })
+
+  if (!transaction) return null
+
+  // Si se marca como completada (vendida), reducir el stock del producto
+  if (idestado === 2) {
+    await prisma.producto.update({
+      where: { idproducto: transaction.idproducto },
+      data: { stock: { decrement: transaction.cantidad } }
+    })
+  }
+
   return prisma.transaccion.update({
     where: { idtransaccion },
     data: { idestado }
