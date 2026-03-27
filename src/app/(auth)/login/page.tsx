@@ -1,8 +1,9 @@
 'use client';
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form"
 import { signIn } from "next-auth/react";
+import { checkUserVerifiedAction } from "@/features/auth/actions";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -17,18 +18,30 @@ export default function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>();
   const [serverError, setServerError] = useState<string | null>(null)
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const verified = searchParams.get("verified");
+  const errorParam = searchParams.get("error");
 
   const onSubmit = handleSubmit(async (data) =>{
-    console.log(data);
+    const check = await checkUserVerifiedAction(data.email);
+    if (check.status === "not-verified") {
+      router.push(`/verificar-correo?email=${encodeURIComponent(data.email)}`);
+      return;
+    }
+
     const resp = await signIn('credentials', {
       correo: data.email,
       contrasena: data.password,
       redirect: false
     });
 
-    if (resp?.error){
+    if (resp?.error) {
+      if (resp.error === "no-verificado") {
+        router.push(`/verificar-correo?email=${encodeURIComponent(data.email)}`);
+        return;
+      }
       setServerError("Correo o contraseña incorrectos");
-    }else{
+    } else {
       router.push("/");
     }
   })
@@ -46,6 +59,22 @@ export default function LoginPage() {
             <h2 className="text-3xl font-extrabold text-gray-800">Bienvenid@</h2>
             <p className="text-gray-500 mt-2">Ingresa tus credenciales para continuar</p>
           </div>
+
+          {verified === "true" && (
+            <div className="bg-green-50 text-green-700 p-4 rounded-xl text-sm text-center font-semibold border border-green-100 mb-4">
+              ¡Cuenta verificada! Ya puedes iniciar sesión.
+            </div>
+          )}
+          {errorParam === "token-expirado" && (
+            <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm text-center font-semibold border border-red-100 mb-4">
+              El link expiró. Solicita uno nuevo.
+            </div>
+          )}
+          {errorParam === "token-invalido" && (
+            <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm text-center font-semibold border border-red-100 mb-4">
+              El link no es válido.
+            </div>
+          )}
 
           <form onSubmit={onSubmit} className="space-y-6">
             <div>

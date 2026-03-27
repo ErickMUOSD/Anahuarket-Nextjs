@@ -32,7 +32,7 @@ export default function ProductForm({ categorias, disponibilidades, userId }: Pr
     resolver: zodResolver(createProductSchema)
   })
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmitHandler = handleSubmit(async (data) => {
     const result = await createProductAction({
       ...data,
       idusuario: userId,
@@ -48,7 +48,7 @@ export default function ProductForm({ categorias, disponibilidades, userId }: Pr
   })
 
   return (
-    <form onSubmit={onSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+    <form onSubmit={onSubmitHandler} className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
 
       {/* Imagen */}
       <div className="space-y-4">

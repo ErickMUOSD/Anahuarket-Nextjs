@@ -1,6 +1,6 @@
 "use server";
 
-import { registerUser } from "@/server/services/userService";
+import { registerUser, resendVerificationEmail, checkUserVerified } from "@/server/services/userService";
 import { RegisterInput, UpdateUserInput } from "@/types/auth.types";
 import { updateUser } from "@/server/services/userService";
 import { redirect } from "next/navigation";
@@ -8,6 +8,14 @@ import { auth, unstable_update } from "@/server/auth";
 
 export async function registerUserAction(data: RegisterInput) {
     return registerUser(data);
+}
+
+export async function resendVerificationEmailAction(correo: string) {
+    return resendVerificationEmail(correo);
+}
+
+export async function checkUserVerifiedAction(correo: string) {
+    return checkUserVerified(correo);
 }
 
 export async function updateUserAction(data: UpdateUserInput) {

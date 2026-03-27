@@ -1,8 +1,12 @@
 import z from "zod";
 
+const correoSchema = process.env.NODE_ENV === "production"
+    ? z.string().email("Correo no válido").endsWith("@anahuac.mx", "Debes usar tu correo institucional @anahuac.mx")
+    : z.string().email("Correo no válido");
+
 export const registerSchema = z.object({
     nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-    correo: z.string().email("Correo no válido").endsWith("@anahuac.mx", "Debes usar tu correo institucional @anahuac.mx"),
+    correo: correoSchema,
     telefono: z.string().min(7, "Teléfono no válido"),
     contrasena: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
 });

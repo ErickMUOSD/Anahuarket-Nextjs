@@ -1,8 +1,12 @@
-import NextAuth from "next-auth"
+import NextAuth, { CredentialsSignin } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import { getUsersByEmail } from "@/server/services/userService"
 import { authConfig } from "./authConfig"
+
+class NoVerificadoError extends CredentialsSignin {
+  code = "no-verificado"
+}
 
 export const { auth, signIn, signOut, handlers, unstable_update } = NextAuth({
   ...authConfig,
@@ -26,12 +30,17 @@ export const { auth, signIn, signOut, handlers, unstable_update } = NextAuth({
           )
           if (!passwordValida) return null
 
+          if (usuario.isactive === 0) {
+            throw new NoVerificadoError()
+          }
+
           return {
             id: String(usuario.idusuario),
             name: usuario.nombre,
             email: usuario.correo,
           }
         } catch (error) {
+          if (error instanceof NoVerificadoError) throw error
           console.error("[authorize] Error al autenticar:", error)
           return null
         }
