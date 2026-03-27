@@ -35,7 +35,7 @@ export default function RegisterPage() {
             reset();
             return;
         }
-        router.push("/login")
+        router.push(`/verificar-correo?email=${encodeURIComponent(data.email)}`)
     });
 
     console.log(errors)
@@ -87,8 +87,7 @@ export default function RegisterPage() {
                                             required: {
                                                 value: true,
                                                 message: "El correo institucional es necesario"
-                                            },
-                                            pattern: { value: /@anahuac\.mx$/, message: "Debes usar tu correo institucional @anahuac.mx" }
+                                            }
                                         })}
                                         placeholder="nombre.apellido@anahuac.mx"
                                         className="w-full px-5 py-4 mb-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all text-gray-700"

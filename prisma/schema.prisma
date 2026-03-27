@@ -16,6 +16,8 @@ model Usuario {
   fecharegistro DateTime       @default(now())
   isactive      Int            @db.SmallInt
   fotousuario   Bytes?
+  verifytoken   String?        @db.VarChar(255)
+  verifytokenexpiry DateTime?
   productos     Producto[]
   compras       Transaccion[]  @relation("Comprador")
   ventas        Transaccion[]  @relation("Vendedor")
