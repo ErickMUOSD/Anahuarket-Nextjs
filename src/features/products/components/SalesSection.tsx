@@ -118,13 +118,6 @@ export default function SalesSection({ ventas }: Props) {
                   >
                     {loadingId === v.idtransaccion ? "..." : "✓ Completar"}
                   </button>
-                  <button
-                    onClick={() => handleUpdateStatus(v.idtransaccion, 3)}
-                    disabled={loadingId === v.idtransaccion}
-                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl text-sm transition-all disabled:opacity-50"
-                  >
-                    {loadingId === v.idtransaccion ? "..." : "✗ Rechazar"}
-                  </button>
                 </div>
 
               </div>

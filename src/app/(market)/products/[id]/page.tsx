@@ -1,9 +1,9 @@
 import { getProductById } from "@/server/services/productService"
 import { auth } from "@/server/auth"
-import { ArrowLeft, Phone } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import BuyForm from "@/features/products/components/BuyForm"
+import InteresForm from "@/features/products/components/InteresForm"
 
 export default async function DetalleProductoPage({
   params
@@ -85,18 +85,9 @@ export default async function DetalleProductoPage({
                 <p className="text-gray-800 font-semibold">{producto.stock} disponible(s)</p>
               </div>
 
-              {/* Teléfono */}
-              <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-4 border border-gray-100">
-                <Phone className="h-5 w-5 text-[#FF6B00]" />
-                <div>
-                  <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Teléfono del vendedor</p>
-                  <p className="text-gray-800 font-bold">{producto.vendedor.telefono}</p>
-                </div>
-              </div>
-
-              {/* Formulario de compra */}
+              {/* Formulario o mensaje */}
               {!esVendedor ? (
-                <BuyForm
+                <InteresForm
                   idproducto={producto.idproducto}
                   precio={Number(producto.precio)}
                   stock={producto.stock}

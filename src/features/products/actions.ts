@@ -50,16 +50,16 @@ export async function createTransactionAction(data: CreateTransactionInput) {
     preciototal,
   })
 
-  if (!result) return { error: "No se pudo procesar la compra" }
+  if (!result) return { error: "No se pudo procesar la solicitud" }
 
-  return { success: true }
+  return { success: true, telefonoVendedor: producto.vendedor.telefono }
 }
 
 export async function updateTransactionStatusAction(idtransaccion: number, idestado: number) {
   const session = await auth()
   if (!session?.user?.id) redirect("/login")
 
-  if (![1, 2, 3].includes(idestado)) {
+  if (![1, 2].includes(idestado)) {
     return { error: "Estado no válido" }
   }
 
