@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { updateTransactionStatusAction } from "@/features/products/actions"
 
 type Transaccion = {
@@ -71,21 +72,23 @@ export default function SalesSection({ ventas }: Props) {
                 className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col md:flex-row md:items-center gap-4"
               >
                 {/* Foto */}
-                <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 shrink-0">
+                <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 shrink-0 relative">
                   {v.producto.fotourl ? (
-                    <img
+                    <Image
                       src={v.producto.fotourl}
                       alt={v.producto.nombreproducto}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   ) : v.producto.fotoproducto ? (
-                    <img
+                    <Image
                       src={`/api/productos/${v.producto.idproducto}/foto`}
                       alt={v.producto.nombreproducto}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   ) : (
-                    <img src="/placeholder.png" alt="Sin imagen" className="w-full h-full object-cover" />
+                    <Image src="/placeholder.png" alt="Sin imagen" fill className="object-cover" />
                   )}
                 </div>
 
@@ -116,7 +119,7 @@ export default function SalesSection({ ventas }: Props) {
                     disabled={loadingId === v.idtransaccion}
                     className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl text-sm transition-all disabled:opacity-50"
                   >
-                    {loadingId === v.idtransaccion ? "..." : "✓ Completar"}
+                    {loadingId === v.idtransaccion ? "..." : "✓ Marcar como Vendido"}
                   </button>
                 </div>
 
@@ -149,21 +152,23 @@ export default function SalesSection({ ventas }: Props) {
                 className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col md:flex-row md:items-center gap-4"
               >
                 {/* Foto */}
-                <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 shrink-0">
+                <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 shrink-0 relative">
                   {v.producto.fotourl ? (
-                    <img
+                    <Image
                       src={v.producto.fotourl}
                       alt={v.producto.nombreproducto}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   ) : v.producto.fotoproducto ? (
-                    <img
+                    <Image
                       src={`/api/productos/${v.producto.idproducto}/foto`}
                       alt={v.producto.nombreproducto}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   ) : (
-                    <img src="/placeholder.png" alt="Sin imagen" className="w-full h-full object-cover" />
+                    <Image src="/placeholder.png" alt="Sin imagen" fill className="object-cover" />
                   )}
                 </div>
 
