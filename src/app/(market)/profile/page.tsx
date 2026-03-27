@@ -156,6 +156,7 @@ export default async function ProfilePage({
                   <div className="flex-grow">
                     <p className="font-black text-gray-800">{t.producto.nombreproducto}</p>
                     <p className="text-sm text-gray-400">Vendedor: {t.vendedor.nombre}</p>
+                    <p className="text-sm text-gray-400">Teléfono: {t.vendedor.telefono}</p>
                     <p className="text-sm text-gray-400">
                       {new Date(t.fechatransaccion).toLocaleDateString('es-MX', {
                         year: 'numeric', month: 'long', day: 'numeric'

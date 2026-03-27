@@ -13,7 +13,7 @@ type Transaccion = {
   producto: { nombreproducto: string, fotoproducto: boolean, fotourl: string | null, idproducto: number }
   metodopago: { nombremetodopago: string }
   estado: { estado: string }
-  comprador: { nombre: string }
+  comprador: { nombre: string, telefono: string }
 }
 
 type Props = {
@@ -47,10 +47,10 @@ export default function SalesSection({ ventas }: Props) {
       <section>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-black text-gray-800 uppercase tracking-tighter">
-            Ventas Pendientes
+            Interesados
           </h2>
           <span className="bg-orange-100 text-[#FF6B00] px-4 py-1 rounded-full text-xs font-bold">
-            {ventasPendientes.length} PENDIENTES
+            {ventasPendientes.length} INTERESADOS
           </span>
         </div>
 
@@ -96,6 +96,7 @@ export default function SalesSection({ ventas }: Props) {
                 <div className="flex-grow">
                   <p className="font-black text-gray-800">{v.producto.nombreproducto}</p>
                   <p className="text-sm text-gray-400">Comprador: {v.comprador.nombre}</p>
+                  <p className="text-sm text-gray-400">Teléfono: {v.comprador.telefono}</p>
                   <p className="text-sm text-gray-400">
                     {new Date(v.fechatransaccion).toLocaleDateString('es-MX', {
                       year: 'numeric', month: 'long', day: 'numeric'
@@ -120,6 +121,13 @@ export default function SalesSection({ ventas }: Props) {
                     className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl text-sm transition-all disabled:opacity-50"
                   >
                     {loadingId === v.idtransaccion ? "..." : "✓ Marcar como Vendido"}
+                  </button>
+                  <button
+                    onClick={() => handleUpdateStatus(v.idtransaccion, 3)}
+                    disabled={loadingId === v.idtransaccion}
+                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl text-sm transition-all disabled:opacity-50"
+                  >
+                    {loadingId === v.idtransaccion ? "..." : "✗ Rechazado"}
                   </button>
                 </div>
 
@@ -176,6 +184,7 @@ export default function SalesSection({ ventas }: Props) {
                 <div className="flex-grow">
                   <p className="font-black text-gray-800">{v.producto.nombreproducto}</p>
                   <p className="text-sm text-gray-400">Comprador: {v.comprador.nombre}</p>
+                  <p className="text-sm text-gray-400">Teléfono: {v.comprador.telefono}</p>
                   <p className="text-sm text-gray-400">
                     {new Date(v.fechatransaccion).toLocaleDateString('es-MX', {
                       year: 'numeric', month: 'long', day: 'numeric'

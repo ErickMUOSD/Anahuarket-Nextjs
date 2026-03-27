@@ -59,7 +59,7 @@ export async function updateTransactionStatusAction(idtransaccion: number, idest
   const session = await auth()
   if (!session?.user?.id) redirect("/login")
 
-  if (![1, 2].includes(idestado)) {
+  if (![1, 2, 3].includes(idestado)) {
     return { error: "Estado no válido" }
   }
 

@@ -34,7 +34,7 @@ export async function getTransactionsByUser(idcomprador: number) {
       producto: { select: { nombreproducto: true, fotoproducto: true, fotourl: true, idproducto: true } },
       metodopago: { select: { nombremetodopago: true } },
       estado: { select: { estado: true } },
-      vendedor: { select: { nombre: true } },
+      vendedor: { select: { nombre: true, telefono: true } },
     },
     orderBy: { fechatransaccion: "desc" }
   })
@@ -51,7 +51,7 @@ export async function getSalesByUser(idvendedor: number) {
       producto: { select: { nombreproducto: true, fotoproducto: true, fotourl: true, idproducto: true } },
       metodopago: { select: { nombremetodopago: true } },
       estado: { select: { estado: true } },
-      comprador: { select: { nombre: true } },
+      comprador: { select: { nombre: true, telefono: true } },
     },
     orderBy: { fechatransaccion: "desc" }
   })
