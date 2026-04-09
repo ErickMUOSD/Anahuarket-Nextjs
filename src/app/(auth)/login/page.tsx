@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { signIn } from "next-auth/react";
 import { checkUserVerifiedAction } from "@/features/auth/actions";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 
 
 type LoginFormValues = {
@@ -13,7 +13,7 @@ type LoginFormValues = {
   password: string
 }
 
-export default function LoginPage() {
+function LoginContent() {
 
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>();
   const [serverError, setServerError] = useState<string | null>(null)
@@ -145,5 +145,13 @@ export default function LoginPage() {
         </p>
       </footer>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginContent />
+    </Suspense>
   );
 }
