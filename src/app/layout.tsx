@@ -1,6 +1,20 @@
-"use client"
-import { SessionProvider } from "next-auth/react";
+import type { Metadata } from "next";
+import Providers from "@/components/Providers";
 import "@/styles/globals.css";
+
+export const metadata: Metadata = {
+  title: "Anahuarket",
+  description: "Marketplace comunitario de Anahuarket",
+  manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/icons/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/icons/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/icons/favicon.ico",
+    apple: "/icons/apple-touch-icon.png",
+  },
+};
 
 export default function RootLayout({
   children,
@@ -8,11 +22,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body>
-        <SessionProvider>
+        <Providers>
           {children}
-        </SessionProvider>
+        </Providers>
       </body>
     </html>
   );
