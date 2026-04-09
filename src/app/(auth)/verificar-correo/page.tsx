@@ -3,9 +3,9 @@
 import { resendVerificationEmailAction } from "@/features/auth/actions";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 
-export default function VerificarCorreoPage() {
+function VerificarCorreoContent() {
     const searchParams = useSearchParams();
     const email = searchParams.get("email") ?? "";
     const [status, setStatus] = useState<"idle" | "enviando" | "enviado" | "error">("idle");
@@ -75,4 +75,12 @@ export default function VerificarCorreoPage() {
         </div>
 
     );
+}
+
+export default function VerificarCorreoPage() {
+  return (
+    <Suspense>
+      <VerificarCorreoContent />
+    </Suspense>
+  );
 }
