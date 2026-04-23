@@ -8,7 +8,7 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-
+COPY .env.example .env
 
 ENV NODE_ENV=local
 ENV PORT=3000
