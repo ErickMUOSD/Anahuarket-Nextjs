@@ -51,7 +51,7 @@ jobs:
           DB_NAME=${{ env.DB_NAME }}
           DATABASE_URL=${{ env.DATABASE_URL }}
         # Asegúrate de que el nombre del owner (tu usuario) esté en minúsculas
-        tags: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
+        tags: ghcr.io/erickmuosd/${{ env.IMAGE_NAME }}:latest
 
     # 4. Se conecta al VPS por SSH, descarga la imagen y la corre
     - name: Deploy to VPS
