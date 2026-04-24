@@ -95,7 +95,7 @@ jobs:
             -e DB_PASSWORD="$DB_PASSWORD" \
             -e DB_NAME="$DB_NAME" \
             -e DATABASE_URL="$DATABASE_URL" \
-            ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
+            ghcr.io/ercikmuosd/${{ env.IMAGE_NAME }}:latest
             
           # Limpia imágenes viejas para no llenar el disco de tu VPS
           docker image prune -f
